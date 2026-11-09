@@ -1,0 +1,79 @@
+{% extends "core/base.html" %}
+
+{% block titulo %}{{ proceso.titulo }} — DEAU{% endblock %}
+
+{% block contenido %}
+<section class="cabecera-pagina">
+  <div class="contenedor">
+    <p class="migas"><a href="{% url 'procesos:lista' %}">Procesos</a> / {{ proceso.titulo }}</p>
+    <h1>{{ proceso.titulo }}</h1>
+    <p>{{ proceso.descripcion_corta }}</p>
+  </div>
+</section>
+
+<section class="seccion contenedor seccion--dos-columnas">
+  <div>
+    {% if proceso.objetivo %}
+      <h2 class="seccion__titulo">Objetivo</h2>
+      <p>{{ proceso.objetivo|linebreaks }}</p>
+    {% endif %}
+
+    {% if etapas %}
+      <h2 class="seccion__titulo">Etapas del proceso</h2>
+      <ol class="linea-tiempo linea-tiempo--vertical">
+        {% for etapa in etapas %}
+          <li><span class="linea-tiempo__punto"></span><p>{{ etapa }}</p></li>
+        {% endfor %}
+      </ol>
+    {% endif %}
+
+    {% if preguntas %}
+      <h2 class="seccion__titulo">Preguntas frecuentes</h2>
+      <div class="acordeon">
+        {% for pregunta, respuesta in preguntas %}
+          <details class="acordeon__item">
+            <summary>{{ pregunta }}</summary>
+            <p>{{ respuesta }}</p>
+          </details>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <aside class="barra-lateral">
+    {% if proceso.responsables %}
+      <div class="tarjeta-lateral">
+        <h3>Responsables</h3>
+        <p>{{ proceso.responsables }}</p>
+      </div>
+    {% endif %}
+
+    {% if plazos %}
+      <div class="tarjeta-lateral">
+        <h3>Calendario y plazos</h3>
+        <ul>
+          {% for plazo in plazos %}<li>{{ plazo }}</li>{% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if documentos %}
+      <div class="tarjeta-lateral">
+        <h3>Documentos y formatos</h3>
+        <ul class="lista-descargas">
+          {% for doc in documentos %}
+            <li><a href="{{ doc.archivo.url }}" target="_blank" rel="noopener">📄 {{ doc.titulo }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if proceso.contacto_tecnico %}
+      <div class="tarjeta-lateral">
+        <h3>Contacto directo</h3>
+        <p>{{ proceso.contacto_tecnico }}</p>
+      </div>
+    {% endif %}
+  </aside>
+</section>
+{% endblock %}

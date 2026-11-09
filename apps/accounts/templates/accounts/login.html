@@ -1,0 +1,34 @@
+{% extends "core/base.html" %}
+
+{% block titulo %}Iniciar sesión — DEAU{% endblock %}
+
+{% block contenido %}
+<section class="seccion contenedor seccion--login">
+  <div class="tarjeta-login">
+    <h1>Acceso institucional</h1>
+    <p>Ingresa con tu cuenta institucional para continuar.</p>
+
+    {% if request.GET.next and not form.errors %}
+      <p class="mensaje mensaje--info" role="status">Inicia sesión para continuar. Si ya la habías iniciado, tu sesión pudo cerrarse por inactividad.</p>
+    {% endif %}
+
+    {% if form.errors %}
+      <p class="mensaje mensaje--error" role="alert">Usuario o contraseña incorrectos. Inténtalo nuevamente.</p>
+    {% endif %}
+
+    <form method="post" class="formulario">
+      {% csrf_token %}
+      <div class="campo">
+        <label for="{{ form.username.id_for_label }}">Usuario</label>
+        {{ form.username }}
+      </div>
+      <div class="campo">
+        <label for="{{ form.password.id_for_label }}">Contraseña</label>
+        {{ form.password }}
+      </div>
+      <input type="hidden" name="next" value="{{ next }}">
+      <button type="submit" class="boton boton--primario boton--ancho-completo">Ingresar</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

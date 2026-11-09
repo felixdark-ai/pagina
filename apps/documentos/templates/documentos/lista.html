@@ -1,0 +1,46 @@
+{% extends "core/base.html" %}
+
+{% block titulo %}Documentos — DEAU{% endblock %}
+
+{% block contenido %}
+<section class="cabecera-pagina">
+  <div class="contenedor">
+    <h1>Repositorio documental</h1>
+    <p>Guías, formatos, normativa, calendarios e informes de los procesos de evaluación y acreditación.</p>
+  </div>
+</section>
+
+<section class="seccion contenedor">
+  <form method="get" class="barra-filtros" role="search">
+    <input type="search" name="q" value="{{ buscar }}" placeholder="Buscar documentos..." aria-label="Buscar documentos" class="form-control">
+    {% if categoria_activa %}<input type="hidden" name="categoria" value="{{ categoria_activa }}">{% endif %}
+    <button type="submit" class="boton boton--primario boton--pequeno">Buscar</button>
+  </form>
+
+  <div class="filtros-categorias">
+    <a href="{% url 'documentos:lista' %}{% if buscar %}?q={{ buscar }}{% endif %}" class="filtro {% if not categoria_activa %}filtro--activo{% endif %}">Todas</a>
+    {% for cat in categorias %}
+      <a href="?categoria={{ cat.slug }}{% if buscar %}&q={{ buscar }}{% endif %}" class="filtro {% if categoria_activa == cat.slug %}filtro--activo{% endif %}">{{ cat.nombre }}</a>
+    {% endfor %}
+  </div>
+
+  <ul class="tabla-documentos">
+    {% for doc in documentos %}
+      <li>
+        <a href="{{ doc.archivo.url }}" target="_blank" rel="noopener">
+          <span class="tabla-documentos__icono" aria-hidden="true">📄</span>
+          <span class="tabla-documentos__info">
+            <strong>{{ doc.titulo }}</strong>
+            <small>{{ doc.categoria.nombre }} · {{ doc.fecha|date:"d/m/Y" }}</small>
+          </span>
+          <span class="tabla-documentos__descargar">Descargar</span>
+        </a>
+      </li>
+    {% empty %}
+      <li class="sin-resultados">No se encontraron documentos con los criterios indicados.</li>
+    {% endfor %}
+  </ul>
+
+  {% include "core/_paginacion.html" with pagina=documentos %}
+</section>
+{% endblock %}

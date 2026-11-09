@@ -1,0 +1,62 @@
+{% extends "core/base.html" %}
+
+{% block titulo %}La DEAU — Quiénes somos{% endblock %}
+
+{% block contenido %}
+<section class="cabecera-pagina">
+  <div class="contenedor">
+    <h1>La DEAU</h1>
+    <p>Dirección de Evaluación y Acreditación Universitaria, dependiente de Rectorado.</p>
+  </div>
+</section>
+
+<section class="seccion contenedor seccion--dos-columnas">
+  <div>
+    <h2 class="seccion__titulo">¿Qué es la DEAU?</h2>
+    <p>{{ sobre.definicion }}</p>
+    <h2 class="seccion__titulo">Función básica</h2>
+    <p>{{ sobre.funcion_basica|linebreaks }}</p>
+  </div>
+  {% if sobre.foto_equipo %}
+    <img src="{{ sobre.foto_equipo.url }}" alt="Equipo de la DEAU en actividad institucional" class="imagen-redondeada">
+  {% endif %}
+</section>
+
+<section class="seccion seccion--gris">
+  <div class="contenedor seccion--dos-columnas">
+    <div class="tarjeta-destacada">
+      <h2>Misión</h2>
+      <p>{{ sobre.mision }}</p>
+    </div>
+    <div class="tarjeta-destacada">
+      <h2>Visión</h2>
+      <p>{{ sobre.vision }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="seccion contenedor">
+  <h2 class="seccion__titulo">Estructura orgánica</h2>
+  <ul class="lista-estructura">
+    {% for cargo in sobre.estructura_organica.splitlines %}
+      <li>{{ cargo }}</li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'institucional:equipo' %}" class="enlace-mas">Conoce a nuestro equipo</a>
+</section>
+
+{% if valores %}
+<section class="seccion contenedor">
+  <h2 class="seccion__titulo">Nuestros valores</h2>
+  <div class="tarjetas-grid">
+    {% for valor in valores %}
+      <div class="tarjeta-proceso">
+        <span class="tarjeta-proceso__icono" aria-hidden="true">{{ valor.icono|default:"★" }}</span>
+        <h3>{{ valor.titulo }}</h3>
+        <p>{{ valor.descripcion }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

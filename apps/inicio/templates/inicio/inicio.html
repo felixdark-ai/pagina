@@ -1,0 +1,195 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block titulo %}DEAU — Inicio{% endblock %}
+
+{% block contenido %}
+
+{% with total=hero_slides|length %}
+<section class="hero{% if total > 1 %} hero--carrusel{% endif %}"{% if total > 1 %} data-hero-carrusel data-intervalo="5000" role="region" aria-roledescription="carrusel" aria-label="Imágenes destacadas"{% endif %}>
+  {% if total %}
+    <div class="hero__fondo" aria-hidden="true">
+      {% for url in hero_slides %}
+        <div class="hero__slide{% if forloop.first %} es-activo{% endif %}" style="background-image:url('{{ url }}')"></div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="hero__velo" aria-hidden="true"></div>
+
+  <div class="contenedor hero__interior">
+    <h1>{{ hero.titulo }}</h1>
+    <p class="hero__subtitulo">{{ hero.subtitulo }}</p>
+    <div class="hero__botones">
+      <a href="{{ hero.boton1_url }}" class="boton boton--primario">{{ hero.boton1_texto }}</a>
+      <a href="{{ hero.boton2_url }}" class="boton boton--outline-claro">{{ hero.boton2_texto }}</a>
+    </div>
+  </div>
+
+  {% if total > 1 %}
+    <div class="contenedor hero__controles">
+      <button type="button" class="hero__ctrl" data-hero-prev aria-label="Imagen anterior">&#8249;</button>
+      <div class="hero__puntos">
+        {% for url in hero_slides %}
+          <button type="button" class="hero__punto{% if forloop.first %} es-activo{% endif %}" data-hero-punto aria-label="Ir a la imagen {{ forloop.counter }} de {{ total }}"><span></span></button>
+        {% endfor %}
+      </div>
+      <button type="button" class="hero__ctrl" data-hero-next aria-label="Imagen siguiente">&#8250;</button>
+      <button type="button" class="hero__ctrl hero__ctrl--pausa" data-hero-pausa aria-label="Pausar rotación de imágenes" aria-pressed="false">
+        <svg class="icono-pausa" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>
+        <svg class="icono-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  {% endif %}
+</section>
+{% endwith %}
+
+{% if sellos %}
+<section class="barra-confianza">
+  <div class="contenedor barra-confianza__lista">
+    {% for sello in sellos %}
+      {% if sello.url %}
+        <a href="{{ sello.url }}" class="barra-confianza__item">
+          {% if sello.imagen %}<img src="{{ sello.imagen.url }}" alt="{{ sello.nombre }}">{% else %}{{ sello.nombre }}{% endif %}
+        </a>
+      {% else %}
+        <span class="barra-confianza__item">
+          {% if sello.imagen %}<img src="{{ sello.imagen.url }}" alt="{{ sello.nombre }}">{% else %}{{ sello.nombre }}{% endif %}
+        </span>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="seccion contenedor">
+  <h2 class="seccion__titulo">¿Qué hacemos?</h2>
+  <p class="seccion__intro">Planificamos, asesoramos, coordinamos y controlamos los procesos de calidad académica de la universidad.</p>
+  <div class="tarjetas-grid">
+    {% for proceso in procesos %}
+      <a href="{{ proceso.get_absolute_url }}" class="tarjeta-proceso">
+        <span class="tarjeta-proceso__icono" aria-hidden="true">{{ proceso.icono|default:"●" }}</span>
+        <h3>{{ proceso.titulo }}</h3>
+        <p>{{ proceso.descripcion_corta }}</p>
+      </a>
+    {% empty %}
+      <p>Próximamente se publicará información sobre nuestros procesos.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{% if indicadores %}
+<section class="seccion seccion--oscura">
+  <div class="contenedor indicadores-barra">
+    {% for indicador in indicadores %}
+      <div class="indicador">
+        <span class="indicador__valor" data-contador>{{ indicador.valor }}</span>
+        <span class="indicador__etiqueta">{{ indicador.etiqueta }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="seccion contenedor">
+  <h2 class="seccion__titulo">Ruta hacia la acreditación</h2>
+  <ol class="linea-tiempo">
+    <li><span class="linea-tiempo__punto"></span><h3>Autoevaluación</h3><p>La unidad académica se evalúa según los estándares de calidad establecidos.</p></li>
+    <li><span class="linea-tiempo__punto"></span><h3>Plan de mejoras</h3><p>Se diseñan e implementan acciones correctivas y de fortalecimiento.</p></li>
+    <li><span class="linea-tiempo__punto"></span><h3>Acreditación</h3><p>La DEAU acompaña el proceso ante el CEUB y organismos internacionales.</p></li>
+    <li><span class="linea-tiempo__punto"></span><h3>Renovación</h3><p>Seguimiento continuo para sostener la calidad certificada en el tiempo.</p></li>
+  </ol>
+</section>
+
+{% if carreras_nacionales or carreras_internacionales %}
+<section class="seccion seccion--gris" id="carreras-acreditadas">
+  <div class="contenedor">
+    <h2 class="seccion__titulo">Carreras Acreditadas</h2>
+    <p class="seccion__intro">Programas académicos con acreditación vigente. Selecciona un escudo para ver los datos de su acreditación, su certificado y las fotos del proceso.</p>
+
+    {% if carreras_nacionales %}
+      {% include "acreditacion/_carrusel.html" with carreras=carreras_nacionales ambito="nacional" titulo="Acreditadas a Nivel Nacional" subtitulo="Reconocidas por el sistema universitario nacional (CEUB)." %}
+    {% endif %}
+    {% if carreras_internacionales %}
+      {% include "acreditacion/_carrusel.html" with carreras=carreras_internacionales ambito="internacional" titulo="Acreditadas a Nivel Internacional" subtitulo="Reconocidas por organismos regionales e internacionales (ARCU-SUR)." %}
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if documentos_destacados %}
+<section class="seccion contenedor">
+  <h2 class="seccion__titulo">Documentos destacados</h2>
+  <div class="tarjetas-grid tarjetas-grid--documentos">
+    {% for doc in documentos_destacados %}
+      <a href="{{ doc.archivo.url }}" class="tarjeta-documento" target="_blank" rel="noopener">
+        <span class="tarjeta-documento__icono" aria-hidden="true">📄</span>
+        <div>
+          <h3>{{ doc.titulo }}</h3>
+          <p>{{ doc.categoria.nombre }} · {{ doc.fecha|date:"d/m/Y" }}</p>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+  <a href="{% url 'documentos:lista' %}" class="enlace-mas">Ver todos los documentos</a>
+</section>
+{% endif %}
+
+<section class="seccion contenedor">
+  <div class="seccion__cabecera">
+    <h2 class="seccion__titulo">Últimas noticias</h2>
+    <a href="{% url 'noticias:lista' %}" class="enlace-mas">Ver todas las noticias</a>
+  </div>
+  <div class="tarjetas-grid tarjetas-grid--noticias">
+    {% for noticia in noticias %}
+      {% include "noticias/_tarjeta.html" with noticia=noticia nivel="h3" %}
+    {% empty %}
+      <p class="sin-resultados">Aún no hay noticias publicadas.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="seccion contenedor">
+  <div class="seccion__cabecera">
+    <h2 class="seccion__titulo">Convocatorias abiertas</h2>
+    <a href="{% url 'convocatorias:lista' %}" class="enlace-mas">Ver todas las convocatorias</a>
+  </div>
+  <ul class="lista-noticias lista-noticias--filas">
+    {% for conv in convocatorias %}
+      <li>
+        <a href="{% url 'convocatorias:lista' %}">
+          <span class="lista-noticias__fecha">Cierra el {{ conv.fecha_cierre|date:"d M Y" }}</span>
+          <span>{{ conv.titulo }}</span>
+        </a>
+      </li>
+    {% empty %}
+      <li class="sin-resultados">No hay convocatorias abiertas por el momento.</li>
+    {% endfor %}
+  </ul>
+</section>
+
+{% if testimonios %}
+<section class="seccion seccion--gris">
+  <div class="contenedor">
+    <h2 class="seccion__titulo">Lo que dicen de nosotros</h2>
+    <div class="testimonios-grid">
+      {% for t in testimonios %}
+        <blockquote class="testimonio">
+          <p>&ldquo;{{ t.texto }}&rdquo;</p>
+          <footer>
+            {% if t.foto %}<img src="{{ t.foto.url }}" alt="" class="testimonio__foto">{% endif %}
+            <span><strong>{{ t.nombre }}</strong><br>{{ t.cargo }}</span>
+          </footer>
+        </blockquote>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="seccion contenedor seccion--contacto-rapido">
+  <h2 class="seccion__titulo">¿Tienes una consulta?</h2>
+  <p>Escríbenos y un miembro del equipo técnico te responderá a la brevedad.</p>
+  <a href="{% url 'contacto:formulario' %}" class="boton boton--primario">Ir a contacto</a>
+</section>
+
+{% endblock %}

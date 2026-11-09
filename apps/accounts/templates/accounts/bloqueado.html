@@ -1,0 +1,13 @@
+{% extends "core/base.html" %}
+{% block titulo %}Acceso bloqueado temporalmente — DEAU{% endblock %}
+{% block contenido %}
+<section class="seccion contenedor" style="text-align:center">
+  <h1>Demasiados intentos fallidos</h1>
+  <p>Por seguridad, el acceso con este usuario fue bloqueado temporalmente tras varios intentos con datos incorrectos.</p>
+  <p><strong>Vuelve a intentarlo en unos 15 minutos.</strong> Si olvidaste tu contraseña, comunícate con el administrador del sitio.</p>
+  <p>
+    <a href="{% url 'inicio:inicio' %}" class="boton boton--primario">Volver al inicio</a>
+    <a href="{% url 'contacto:formulario' %}" class="boton boton--outline">Contactar a la DEAU</a>
+  </p>
+</section>
+{% endblock %}

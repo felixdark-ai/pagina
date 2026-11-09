@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+{% block titulo %}Página no encontrada — DEAU{% endblock %}
+{% block contenido %}
+<section class="seccion contenedor" style="text-align:center">
+  <h1>No encontramos esa página</h1>
+  <p>Es posible que el enlace haya cambiado o que la página ya no exista.</p>
+  <p>
+    <a href="{% url 'inicio:inicio' %}" class="boton boton--primario">Volver al inicio</a>
+    <a href="{% url 'contacto:formulario' %}" class="boton boton--outline">Contactar a la DEAU</a>
+  </p>
+</section>
+{% endblock %}

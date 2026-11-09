@@ -1,0 +1,123 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>document.documentElement.classList.add('js');</script>
+<title>{% block titulo %}DEAU — Dirección de Evaluación y Acreditación Universitaria{% endblock %}</title>
+<meta name="description" content="{% block meta_descripcion %}Dirección de Evaluación y Acreditación Universitaria (DEAU): autoevaluación, acreditación y gestión de la calidad académica.{% endblock %}">
+<meta name="theme-color" content="#002B5C">
+<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+<link rel="icon" type="image/png" href="{% static 'core/img/escudo.png' %}">
+<meta property="og:site_name" content="DEAU">
+<meta property="og:title" content="{% block og_titulo %}DEAU — Evaluación y Acreditación Universitaria{% endblock %}">
+<meta property="og:description" content="{% block og_descripcion %}Coordinamos los procesos de autoevaluación y acreditación de las unidades académicas.{% endblock %}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{% if og_imagen %}{{ og_imagen }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'core/img/escudo.png' %}{% endif %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+<a class="salto-contenido" href="#contenido-principal">Saltar al contenido principal</a>
+
+{% with seccion=request.resolver_match.namespace %}
+<header class="cabecera" id="cabecera">
+  <div class="contenedor cabecera__interior">
+    <a href="{% url 'inicio:inicio' %}" class="cabecera__marca" aria-label="Ir al inicio - DEAU">
+      <img src="{% static 'core/img/escudo.png' %}" alt="" class="cabecera__escudo" width="48" height="48">
+      <span class="cabecera__texto">
+        <strong>DEAU</strong>
+        <small>Evaluación y Acreditación Universitaria</small>
+      </span>
+    </a>
+
+    <button class="cabecera__toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="menuPrincipal" aria-label="Abrir menú de navegación">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="cabecera__nav" id="menuPrincipal" aria-label="Navegación principal">
+      <ul>
+        <li><a href="{% url 'inicio:inicio' %}"{% if seccion == 'inicio' %} aria-current="page"{% endif %}>Inicio</a></li>
+        <li><a href="{% url 'institucional:deau' %}"{% if seccion == 'institucional' %} aria-current="page"{% endif %}>La DEAU</a></li>
+        <li><a href="{% url 'procesos:lista' %}"{% if seccion == 'procesos' %} aria-current="page"{% endif %}>Procesos</a></li>
+        <li><a href="{% url 'documentos:lista' %}"{% if seccion == 'documentos' %} aria-current="page"{% endif %}>Documentos</a></li>
+        <li><a href="{% url 'convocatorias:lista' %}"{% if seccion == 'convocatorias' %} aria-current="page"{% endif %}>Convocatorias</a></li>
+        <li><a href="{% url 'noticias:lista' %}"{% if seccion == 'noticias' %} aria-current="page"{% endif %}>Noticias</a></li>
+        <li><a href="{% url 'contacto:formulario' %}"{% if seccion == 'contacto' %} aria-current="page"{% endif %}>Contacto</a></li>
+      </ul>
+      {% if user.is_authenticated %}
+        <div class="cabecera__usuario">
+          {% if user.is_staff %}<a href="{% url 'panel:inicio' %}" class="boton boton--pequeno">Panel</a>{% endif %}
+          <form action="{% url 'accounts:logout' %}" method="post" class="cabecera__logout">
+            {% csrf_token %}
+            <button type="submit" class="enlace-boton">Cerrar sesión</button>
+          </form>
+        </div>
+      {% else %}
+        <a href="{% url 'accounts:login' %}" class="boton boton--pequeno boton--outline">Ingresar</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+{% endwith %}
+
+<main id="contenido-principal">
+  {% if messages %}
+    <div class="contenedor mensajes-django" role="status">
+      {% for message in messages %}
+        <p class="mensaje mensaje--{{ message.tags }}">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% block contenido %}{% endblock %}
+</main>
+
+<footer class="pie">
+  <div class="contenedor pie__grid">
+    <div>
+      <div class="pie__marca">
+        <img src="{% static 'core/img/escudo.png' %}" alt="" width="56" height="56" loading="lazy">
+        <h2 class="pie__titulo">DEAU</h2>
+      </div>
+      <p>Dirección de Evaluación y Acreditación Universitaria, dependiente de Rectorado.</p>
+    </div>
+    <div>
+      <h3>Enlaces</h3>
+      <ul>
+        <li><a href="{% url 'institucional:deau' %}">La DEAU</a></li>
+        <li><a href="{% url 'procesos:lista' %}">Procesos</a></li>
+        <li><a href="{% url 'documentos:lista' %}">Documentos</a></li>
+        <li><a href="{% url 'noticias:lista' %}">Noticias</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Contacto</h3>
+      <ul>
+        <li>{{ contacto_global.correo }}</li>
+        <li>{{ contacto_global.telefono }}</li>
+        <li>{{ contacto_global.direccion }}</li>
+        <li>{{ contacto_global.horario }}</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Redes</h3>
+      <ul class="pie__redes">
+        {% if contacto_global.facebook %}<li><a href="{{ contacto_global.facebook }}" target="_blank" rel="noopener noreferrer">Facebook</a></li>{% endif %}
+        {% if contacto_global.twitter_x %}<li><a href="{{ contacto_global.twitter_x }}" target="_blank" rel="noopener noreferrer">X / Twitter</a></li>{% endif %}
+        {% if contacto_global.linkedin %}<li><a href="{{ contacto_global.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>{% endif %}
+      </ul>
+    </div>
+  </div>
+  <div class="pie__inferior contenedor">
+    <p>&copy; {% now "Y" %} DEAU — Universidad Autónoma Tomás Frías. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script src="{% static 'core/js/main.js' %}" defer></script>
+{% if user.is_authenticated %}<script src="{% static 'accounts/js/sesion.js' %}" data-ping="{% url 'accounts:sesion_ping' %}" data-intervalo="{{ SESION_PING_SEGUNDOS }}" data-login="{% url 'accounts:login' %}" defer></script>{% endif %}
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

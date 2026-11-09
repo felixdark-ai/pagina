@@ -1,0 +1,57 @@
+{% extends "core/base.html" %}
+
+{% block titulo %}Autoridades y equipo técnico — DEAU{% endblock %}
+
+{% block contenido %}
+<section class="cabecera-pagina">
+  <div class="contenedor">
+    <h1>Autoridades y equipo técnico</h1>
+    <p>Conoce al equipo responsable de los procesos de evaluación y acreditación.</p>
+  </div>
+</section>
+
+<section class="seccion contenedor">
+  {% if director %}
+    <h2 class="seccion__titulo">Dirección</h2>
+    <div class="tarjeta-persona tarjeta-persona--destacada">
+      {% if director.foto %}<img src="{{ director.foto.url }}" alt="{{ director.nombre }}">{% else %}<div class="tarjeta-persona__avatar" aria-hidden="true">{{ director.nombre|first }}</div>{% endif %}
+      <div>
+        <h3>{{ director.nombre }}</h3>
+        <p>{{ director.get_cargo_display }}</p>
+        {% if director.correo %}<p><a href="mailto:{{ director.correo }}">{{ director.correo }}</a></p>{% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if tecnicos %}
+    <h2 class="seccion__titulo">Equipo técnico</h2>
+    <div class="tarjetas-grid">
+      {% for persona in tecnicos %}
+        <div class="tarjeta-persona">
+          {% if persona.foto %}<img src="{{ persona.foto.url }}" alt="{{ persona.nombre }}">{% else %}<div class="tarjeta-persona__avatar" aria-hidden="true">{{ persona.nombre|first }}</div>{% endif %}
+          <div>
+            <h3>{{ persona.nombre }}</h3>
+            <p>{{ persona.get_cargo_display }}</p>
+            {% if persona.correo %}<p><a href="mailto:{{ persona.correo }}">{{ persona.correo }}</a></p>{% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if administrativos %}
+    <h2 class="seccion__titulo">Asistencia administrativa</h2>
+    <div class="tarjetas-grid">
+      {% for persona in administrativos %}
+        <div class="tarjeta-persona">
+          {% if persona.foto %}<img src="{{ persona.foto.url }}" alt="{{ persona.nombre }}">{% else %}<div class="tarjeta-persona__avatar" aria-hidden="true">{{ persona.nombre|first }}</div>{% endif %}
+          <div>
+            <h3>{{ persona.nombre }}</h3>
+            <p>{{ persona.get_cargo_display }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

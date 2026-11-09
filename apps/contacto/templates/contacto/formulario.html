@@ -1,0 +1,76 @@
+{% extends "core/base.html" %}
+
+{% block titulo %}Contacto — DEAU{% endblock %}
+
+{% block contenido %}
+<section class="cabecera-pagina">
+  <div class="contenedor">
+    <h1>Contacto</h1>
+    <p>Escríbenos tus consultas sobre autoevaluación, acreditación y renovación de acreditación.</p>
+  </div>
+</section>
+
+<section class="seccion contenedor seccion--dos-columnas">
+  <div>
+    <h2 class="seccion__titulo">Envíanos un mensaje</h2>
+    <form method="post" novalidate class="formulario" id="formularioContacto">
+      {% csrf_token %}
+      <div class="campo">
+        <label for="{{ form.nombre.id_for_label }}">Nombre</label>
+        {{ form.nombre }}
+        {% if form.nombre.errors %}<span class="campo__error" id="error-nombre" role="alert">{{ form.nombre.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="campo">
+        <label for="{{ form.correo.id_for_label }}">Correo electrónico</label>
+        {{ form.correo }}
+        {% if form.correo.errors %}<span class="campo__error" id="error-correo" role="alert">{{ form.correo.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="campo">
+        <label for="{{ form.asunto.id_for_label }}">Asunto</label>
+        {{ form.asunto }}
+        {% if form.asunto.errors %}<span class="campo__error" id="error-asunto" role="alert">{{ form.asunto.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="campo">
+        <label for="{{ form.mensaje.id_for_label }}">Mensaje</label>
+        {{ form.mensaje }}
+        {% if form.mensaje.errors %}<span class="campo__error" id="error-mensaje" role="alert">{{ form.mensaje.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="campo-trampa" aria-hidden="true">
+        <label for="{{ form.sitio_web.id_for_label }}">No completar este campo</label>
+        {{ form.sitio_web }}
+      </div>
+      <button type="submit" class="boton boton--primario">Enviar mensaje</button>
+    </form>
+  </div>
+
+  <aside class="barra-lateral">
+    <div class="tarjeta-lateral">
+      <h3>Datos de contacto</h3>
+      <ul>
+        <li>Correo: <a href="mailto:{{ contacto_global.correo }}">{{ contacto_global.correo }}</a></li>
+        <li>Teléfono: {{ contacto_global.telefono }}</li>
+        <li>Dirección: {{ contacto_global.direccion }}</li>
+        <li>Horario: {{ contacto_global.horario }}</li>
+      </ul>
+    </div>
+    {% if contacto_global.mapa_embed_url %}
+      <div class="mapa-contenedor">
+        <iframe src="{{ contacto_global.mapa_embed_url }}" loading="lazy" title="Ubicación de la DEAU" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    {% endif %}
+  </aside>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('formularioContacto').addEventListener('submit', function (e) {
+  const campos = this.querySelectorAll('[required], textarea, input[type="email"]');
+  let valido = true;
+  campos.forEach(function (campo) {
+    if (!campo.value.trim()) { valido = false; }
+  });
+  if (!valido) { e.preventDefault(); }
+});
+</script>
+{% endblock %}

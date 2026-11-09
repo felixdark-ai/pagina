@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+
+{% block titulo %}{{ proceso.titulo }} — DEAU{% endblock %}
+
+{% block contenido %}
+<section class="cabecera-pagina">
+  <div class="contenedor">
+    <p class="migas"><a href="{% url 'procesos:lista' %}">Procesos</a> / {{ proceso.titulo }}</p>
+    <h1>{{ proceso.titulo }}</h1>
+    <p>{{ proceso.descripcion_corta }}</p>
+  </div>
+</section>
+
+<section class="seccion contenedor seccion--acceso-externo">
+  {% if proceso.objetivo %}<p>{{ proceso.objetivo|linebreaks }}</p>{% endif %}
+
+  <div class="tarjeta-acceso-externo">
+    <span class="tarjeta-acceso-externo__icono" aria-hidden="true">↗</span>
+    <h2>{{ proceso.url_externa_nombre|default:proceso.titulo }}</h2>
+    {% if proceso.url_externa %}
+      <p>Al continuar, ingresarás al sistema externo, donde podrás iniciar sesión si es necesario.</p>
+
+      <a href="{{ proceso.url_externa }}" class="boton boton--primario">
+        Ingresar a {{ proceso.url_externa_nombre|default:proceso.titulo }}
+      </a>
+    {% else %}
+      <p>La dirección de este sistema aún no está configurada. Contacta al administrador del sitio.</p>
+    {% endif %}
+  </div>
+
+  {% if proceso.contacto_tecnico %}
+    <p class="texto-ayuda">¿Problemas para acceder? Contacta a: {{ proceso.contacto_tecnico }}</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "core/base.html" %}
+
+{% block titulo %}Procesos — DEAU{% endblock %}
+
+{% block contenido %}
+<section class="cabecera-pagina">
+  <div class="contenedor">
+    <h1>Nuestros procesos</h1>
+    <p>Autoevaluación, acreditación, renovación y los sistemas de seguimiento institucional.</p>
+  </div>
+</section>
+
+<section class="seccion contenedor">
+  <div class="tarjetas-grid">
+    {% for proceso in procesos %}
+      <a href="{{ proceso.get_absolute_url }}" class="tarjeta-proceso">
+        <span class="tarjeta-proceso__icono" aria-hidden="true">{{ proceso.icono|default:"●" }}</span>
+        <h3>{{ proceso.titulo }}</h3>
+        <p>{{ proceso.descripcion_corta }}</p>
+        {% if proceso.tipo == "externo" %}<span class="etiqueta etiqueta--login">Sistema externo</span>{% endif %}
+      </a>
+    {% empty %}
+      <p>Aún no se han publicado procesos.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

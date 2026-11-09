@@ -1,0 +1,30 @@
+{# Carrusel de escudos. Parámetros: carreras, titulo, subtitulo, ambito (nacional|internacional) #}
+<div class="grupo-acreditacion grupo-acreditacion--{{ ambito }}">
+  <div class="grupo-acreditacion__cabecera">
+    <h3 class="grupo-acreditacion__titulo">{{ titulo }}</h3>
+    <p class="grupo-acreditacion__subtitulo">{{ subtitulo }}</p>
+  </div>
+
+  <div class="carrusel" data-carrusel>
+    <button type="button" class="carrusel__flecha carrusel__flecha--izq" data-carrusel-prev aria-label="Ver carreras anteriores">&#8249;</button>
+
+    <ul class="carrusel__pista" data-carrusel-pista>
+      {% for carrera in carreras %}
+        <li class="carrusel__item">
+          <a href="{{ carrera.get_absolute_url }}" class="carrusel__enlace" aria-label="Ver detalle de acreditación de {{ carrera.nombre }}">
+            <span class="carrusel__escudo-wrap">
+              <img src="{{ carrera.escudo.url }}" alt="Escudo de {{ carrera.nombre }}" class="carrusel__escudo" loading="lazy">
+              <span class="carrusel__marca" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </span>
+            <span class="carrusel__nombre">{{ carrera.nombre }}</span>
+            <span class="carrusel__organismo">{{ carrera.get_organismo_acreditador_display }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <button type="button" class="carrusel__flecha carrusel__flecha--der" data-carrusel-next aria-label="Ver más carreras">&#8250;</button>
+  </div>
+</div>

@@ -1,0 +1,6 @@
+.jodit-container { max-width: 900px; border-radius: 6px; }
+.jodit-container:not(.jodit_inline) .jodit-workplace { min-height: 320px; }
+.jodit-wysiwyg { font-size: 16px; line-height: 1.7; }
+.jodit-wysiwyg img { max-width: 100%; height: auto; }
+.jodit-wysiwyg table { border-collapse: collapse; }
+.jodit-wysiwyg td, .jodit-wysiwyg th { border: 1px solid #c9d1de; padding: 6px 10px; }

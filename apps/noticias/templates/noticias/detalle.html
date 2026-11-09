@@ -1,0 +1,76 @@
+{% extends "core/base.html" %}
+{% load seguridad %}
+
+{% block titulo %}{{ noticia.titulo }} — DEAU{% endblock %}
+{% block meta_descripcion %}{{ noticia.resumen }}{% endblock %}
+{% block og_titulo %}{{ noticia.titulo }}{% endblock %}
+{% block og_descripcion %}{{ noticia.resumen }}{% endblock %}
+
+{% block contenido %}
+<article class="seccion contenedor articulo-noticia">
+  <p class="migas migas--oscuras"><a href="{% url 'noticias:lista' %}">Noticias</a> / {{ noticia.titulo }}</p>
+  <h1>{{ noticia.titulo }}</h1>
+  <p class="articulo-noticia__fecha"><time datetime="{{ noticia.fecha|date:'Y-m-d' }}">{{ noticia.fecha|date:"d \d\e F \d\e Y" }}</time></p>
+  <p class="articulo-noticia__resumen">{{ noticia.resumen }}</p>
+
+  {# Video: archivo propio o YouTube/Vimeo incrustado #}
+  {% if noticia.video_embed %}
+    <div class="video-marco">
+      <iframe src="{{ noticia.video_embed.embed }}" title="Video: {{ noticia.titulo }}" loading="lazy"
+              allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+  {% elif noticia.video_archivo %}
+    <div class="video-marco video-marco--archivo">
+      <video controls preload="metadata" playsinline{% if noticia.imagen %} poster="{{ noticia.imagen.url }}"{% endif %}>
+        <source src="{{ noticia.video_archivo.url }}">
+        Tu navegador no puede reproducir este video. <a href="{{ noticia.video_archivo.url }}">Descárgalo aquí</a>.
+      </video>
+    </div>
+  {% endif %}
+
+  {% if noticia.imagen %}
+    <a href="{{ noticia.imagen.url }}" class="articulo-noticia__portada" data-lightbox="noticia" data-pie="{{ noticia.titulo }}">
+      <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}" class="articulo-noticia__imagen">
+    </a>
+  {% endif %}
+
+  <div class="articulo-noticia__contenido">
+    {{ noticia.contenido|html_seguro }}
+  </div>
+
+  {% if galeria %}
+    <section class="galeria" aria-labelledby="galeriaTitulo">
+      <h2 id="galeriaTitulo" class="seccion__titulo">Galería de imágenes</h2>
+      <ul class="galeria__grid">
+        {% for foto in galeria %}
+          <li class="galeria__item">
+            <a href="{{ foto.imagen.url }}" data-lightbox="noticia" data-pie="{{ foto.pie }}">
+              <img src="{{ foto.imagen.url }}" alt="{{ foto.pie|default:noticia.titulo }}" loading="lazy">
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+
+  {% if noticia.enlace_externo %}
+    <div class="articulo-noticia__externo">
+      <a href="{{ noticia.enlace_externo }}" class="boton boton--primario" target="_blank" rel="noopener noreferrer">Más información en el sitio original</a>
+    </div>
+  {% endif %}
+</article>
+
+{% if relacionadas %}
+<section class="seccion seccion--gris">
+  <div class="contenedor">
+    <h2 class="seccion__titulo">Otras noticias</h2>
+    <div class="tarjetas-grid tarjetas-grid--noticias">
+      {% for n in relacionadas %}
+        {% include "noticias/_tarjeta.html" with noticia=n nivel="h3" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

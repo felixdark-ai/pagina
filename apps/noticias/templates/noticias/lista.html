@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+
+{% block titulo %}Noticias y eventos — DEAU{% endblock %}
+
+{% block contenido %}
+<section class="cabecera-pagina">
+  <div class="contenedor">
+    <h1>Noticias y eventos</h1>
+    <p>Novedades, talleres y actividades de la Dirección de Evaluación y Acreditación Universitaria.</p>
+  </div>
+</section>
+
+<section class="seccion contenedor">
+  <div class="tarjetas-grid tarjetas-grid--noticias">
+    {% for noticia in noticias %}
+      {% include "noticias/_tarjeta.html" with noticia=noticia nivel="h2" %}
+    {% empty %}
+      <p class="sin-resultados">Aún no hay noticias publicadas.</p>
+    {% endfor %}
+  </div>
+
+  {% include "core/_paginacion.html" with pagina=noticias %}
+</section>
+{% endblock %}

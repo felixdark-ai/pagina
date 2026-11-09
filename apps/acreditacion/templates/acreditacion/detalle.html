@@ -1,0 +1,117 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block titulo %}Acreditación de {{ carrera.nombre }} — DEAU{% endblock %}
+{% block meta_descripcion %}Información pública sobre la acreditación de {{ carrera.nombre }}.{% endblock %}
+{% block og_titulo %}{{ carrera.nombre }}: carrera acreditada{% endblock %}
+
+{% block extra_head %}
+  {% if carrera.certificado_es_pdf %}
+    <script src="{% static 'acreditacion/vendor/pdfjs/pdf.min.js' %}" defer></script>
+    <script src="{% static 'acreditacion/js/visor_pdf.js' %}" defer></script>
+  {% endif %}
+{% endblock %}f
+
+{% block contenido %}
+<section class="cabecera-pagina cabecera-pagina--acreditacion">
+  <div class="contenedor cabecera-acreditacion">
+    <img src="{{ carrera.escudo.url }}" alt="Escudo de {{ carrera.nombre }}" class="cabecera-acreditacion__escudo">
+    <div class="cabecera-acreditacion__texto">
+      <p class="migas"><a href="{% url 'inicio:inicio' %}">Inicio</a> / <a href="{% url 'inicio:inicio' %}#carreras-acreditadas">Carreras acreditadas</a> / {{ carrera.nombre }}</p>
+      <h1>{{ carrera.nombre }}</h1>
+      {% if carrera.facultad %}<p>{{ carrera.facultad }}</p>{% endif %}
+    </div>
+    <div class="sello-bloque">
+      {% include "acreditacion/_sello.html" %}
+      <p class="sello-bloque__texto">
+        <strong>Carrera Acreditada</strong>
+        <span>{{ carrera.get_ambito_display }}</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="seccion contenedor seccion--dos-columnas">
+  <div>
+    <h2 class="seccion__titulo">Sobre esta acreditación</h2>
+    {{ carrera.resumen_publico|linebreaks }}
+
+    {% if carrera.certificado_publico %}
+      <section class="certificado" aria-labelledby="certTitulo">
+        <h2 id="certTitulo" class="seccion__titulo">Certificado de acreditación</h2>
+        {% if carrera.certificado_es_pdf %}
+          <div class="visor-pdf" data-visor-pdf data-src="{{ carrera.certificado_publico.url }}" data-worker="{% static 'acreditacion/vendor/pdfjs/pdf.worker.min.js' %}">
+            <div class="visor-pdf__barra" role="toolbar" aria-label="Controles del visor del certificado">
+              <div class="visor-pdf__grupo" data-pdf-paginas hidden>
+                <button type="button" data-pdf-prev aria-label="Página anterior" disabled>&#8249;</button>
+                <span class="visor-pdf__info" aria-live="polite">Página <span data-pdf-actual>1</span> de <span data-pdf-total>–</span></span>
+                <button type="button" data-pdf-next aria-label="Página siguiente" disabled>&#8250;</button>
+              </div>
+              <div class="visor-pdf__grupo">
+                <button type="button" data-pdf-menos aria-label="Alejar" disabled>&minus;</button>
+                <span class="visor-pdf__info" data-pdf-zoom aria-live="polite">100%</span>
+                <button type="button" data-pdf-mas aria-label="Acercar" disabled>+</button>
+                <button type="button" class="visor-pdf__texto" data-pdf-ajustar>Ajustar al ancho</button>
+                <button type="button" data-pdf-pantalla aria-label="Pantalla completa">&#9974;</button>
+              </div>
+            </div>
+            <div class="visor-pdf__lienzo" data-pdf-lienzo tabindex="0" aria-label="Certificado de acreditación de {{ carrera.nombre }}. Usa las flechas para cambiar de página.">
+              <canvas data-pdf-canvas role="img" aria-label="Certificado de acreditación de {{ carrera.nombre }}"></canvas>
+              <div class="visor-pdf__estado" data-pdf-estado role="status">
+                <span class="visor-pdf__spinner" aria-hidden="true"></span>
+                <span>Cargando certificado…</span>
+                <noscript>Activa JavaScript para ver el certificado aquí, o usa los botones «Abrir» y «Descargar».</noscript>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <a href="{{ carrera.certificado_publico.url }}" class="certificado__imagen" data-lightbox="certificado" data-pie="Certificado de acreditación de {{ carrera.nombre }}">
+            <img src="{{ carrera.certificado_publico.url }}" alt="Certificado de acreditación de {{ carrera.nombre }}" loading="lazy">
+          </a>
+        {% endif %}
+        <div class="certificado__acciones">
+          <a href="{{ carrera.certificado_publico.url }}" class="boton boton--outline boton--pequeno" target="_blank" rel="noopener">Abrir en una pestaña nueva</a>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if imagenes %}
+      <section class="galeria" aria-labelledby="procesoTitulo">
+        <h2 id="procesoTitulo" class="seccion__titulo">Fotos del proceso de acreditación</h2>
+        <ul class="galeria__grid">
+          {% for foto in imagenes %}
+            <li class="galeria__item">
+              <a href="{{ foto.imagen.url }}" data-lightbox="proceso" data-pie="{{ foto.descripcion }}">
+                <img src="{{ foto.imagen.url }}" alt="{{ foto.descripcion|default:'Foto del proceso de acreditación' }}" loading="lazy">
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+  </div>
+
+  <aside class="barra-lateral">
+    <div class="tarjeta-lateral">
+      <h3>Datos de la acreditación</h3>
+      <dl class="datos">
+        <div><dt>Ámbito</dt><dd>{{ carrera.get_ambito_display }}</dd></div>
+        <div><dt>Organismo</dt><dd>{{ carrera.get_organismo_acreditador_display }}</dd></div>
+        <div><dt>Fecha de acreditación</dt><dd>{{ carrera.fecha_acreditacion|date:"d/m/Y" }}</dd></div>
+        <div>
+          <dt>Vigencia</dt>
+          <dd>
+            {% if carrera.vigencia_hasta %}
+              hasta el {{ carrera.vigencia_hasta|date:"d/m/Y" }}
+              {% if carrera.vigente %}<span class="etiqueta etiqueta--abierta">Vigente</span>{% else %}<span class="etiqueta etiqueta--cerrada">Vencida</span>{% endif %}
+            {% else %}
+              Indefinida <span class="etiqueta etiqueta--abierta">Vigente</span>
+            {% endif %}
+          </dd>
+        </div>
+      </dl>
+    </div>
+    <a href="{% url 'inicio:inicio' %}#carreras-acreditadas" class="enlace-mas">Ver todas las carreras acreditadas</a>
+  </aside>
+</section>
+{% endblock %}

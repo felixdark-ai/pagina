@@ -1,0 +1,24 @@
+{# Tarjeta de noticia con imagen o video. Parámetros: noticia, nivel (h2|h3) #}
+<article class="tarjeta-noticia">
+  <a href="{{ noticia.get_absolute_url }}" class="tarjeta-noticia__enlace">
+    <div class="tarjeta-noticia__media">
+      {% if noticia.portada_url %}
+        <img src="{{ noticia.portada_url }}" alt="" loading="lazy">
+      {% elif noticia.video_archivo %}
+        <video src="{{ noticia.video_archivo.url }}#t=0.5" preload="metadata" muted playsinline tabindex="-1" aria-hidden="true"></video>
+      {% else %}
+        <div class="tarjeta-noticia__placeholder" aria-hidden="true"></div>
+      {% endif %}
+      {% if noticia.tiene_video %}
+        <span class="insignia insignia--video"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>Video</span>
+      {% elif noticia.total_imagenes > 1 %}
+        <span class="insignia">{{ noticia.total_imagenes }} fotos</span>
+      {% endif %}
+    </div>
+    <div class="tarjeta-noticia__cuerpo">
+      <time class="tarjeta-noticia__fecha" datetime="{{ noticia.fecha|date:'Y-m-d' }}">{{ noticia.fecha|date:"d M Y" }}</time>
+      <{{ nivel|default:"h2" }} class="tarjeta-noticia__titulo">{{ noticia.titulo }}</{{ nivel|default:"h2" }}>
+      <p>{{ noticia.resumen }}</p>
+    </div>
+  </a>
+</article>
