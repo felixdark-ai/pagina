@@ -543,18 +543,19 @@ textarea { resize: vertical; }
 .paginacion { display: flex; justify-content: center; align-items: center; gap: 18px; margin-top: 32px; font-weight: 600; }
 
 /* ---------- Pie de página ---------- */
-.pie { background: var(--azul-profundo); color: rgba(255,255,255,0.86); padding: 60px 0 0; margin-top: 40px; border-top: 4px solid var(--rojo); }
-.pie__grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; padding-bottom: 36px; }
+.pie { background: var(--azul-profundo); color: rgba(255,255,255,0.86); padding: 36px 0 0; margin-top: 32px; border-top: 4px solid var(--rojo); font-size: 0.9rem; }
+.pie__grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; padding-bottom: 24px; }
 .pie h2, .pie h3 { color: var(--blanco); }
-.pie p { color: rgba(255,255,255,.8); }
-.pie__marca { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
-.pie__marca img { width: 56px; height: 56px; object-fit: contain; }
-.pie__titulo { font-size: 1.4rem; margin: 0; }
+.pie h3 { margin: 0 0 12px; font-size: 1rem; }
+.pie p { color: rgba(255,255,255,.8); margin: 0 0 12px; }
+.pie__marca { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.pie__marca img { width: 44px; height: 44px; object-fit: contain; }
+.pie__titulo { font-size: 1.2rem; margin: 0; }
 .pie ul { list-style: none; padding: 0; margin: 0; }
-.pie li { margin-bottom: 8px; }
+.pie li { margin-bottom: 5px; }
 .pie a { color: rgba(255,255,255,0.86); }
 .pie a:hover { color: var(--rojo-claro); }
-.pie__inferior { border-top: 1px solid rgba(255,255,255,0.15); padding: 18px 0; font-size: 0.85rem; text-align: center; }
+.pie__inferior { border-top: 1px solid rgba(255,255,255,0.15); padding: 12px 0; font-size: 0.8rem; text-align: center; }
 .pie__inferior p { margin: 0; }
 
 /* ---------- Estructura orgánica / varios ---------- */
